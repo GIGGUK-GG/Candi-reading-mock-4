@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Practice Test 4</title>
+<style>
+  :root{
+    --blue-900:#0d2b57;
+    --blue-700:#154a91;
+    --blue-600:#1c5fb8;
+    --blue-100:#e8f0fc;
+    --blue-050:#f4f8fd;
+    --red-600:#b3261e;
+    --red-050:#fdecec;
+    --ink:#152238;
+    --ink-soft:#4c5a70;
+    --line:#d7e0ee;
+    --white:#ffffff;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--white); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:"Source Serif 4","Georgia",serif; font-weight:600; color:var(--blue-900); margin:0 0 .4em 0; }
+  ::selection{ background:#bcd6fb; }
+  .hidden{ display:none !important; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  #topbar{
+    position:sticky; top:0; z-index:50; background:var(--white); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; padding:10px 22px; gap:16px; flex-wrap:wrap;
+  }
+  #topbar .brand{ display:flex; align-items:baseline; gap:10px; }
+  #topbar .brand small{ color:var(--ink-soft); font-size:.8rem; letter-spacing:.02em; }
+  #timerWrap{ display:flex; align-items:center; gap:8px; font-variant-numeric:tabular-nums; }
+  #timerLabel{ font-size:.78rem; color:var(--ink-soft); }
+  #timerDisplay{
+    font-size:1.25rem; font-weight:700; color:var(--blue-700); border:1px solid var(--blue-100);
+    background:var(--blue-050); padding:4px 12px; border-radius:var(--radius); min-width:82px; text-align:center;
+  }
+  #timerDisplay.warning{ color:var(--red-600); background:var(--red-050); border-color:#f3caca; }
+
+  #sectionNav{ display:flex; gap:6px; padding:10px 22px; border-bottom:1px solid var(--line); background:var(--blue-050); flex-wrap:wrap; }
+  .navBtn{ border:1px solid var(--line); background:var(--white); color:var(--blue-700); padding:7px 14px; border-radius:999px; font-size:.88rem; font-weight:600; }
+  .navBtn[disabled]{ opacity:.45; cursor:not-allowed; }
+  .navBtn.active{ background:var(--blue-600); color:var(--white); border-color:var(--blue-600); }
+  #submitBtn{ margin-left:auto; background:var(--red-600); color:var(--white); border:1px solid var(--red-600); padding:7px 16px; border-radius:999px; font-weight:700; font-size:.88rem; }
+  #submitBtn:hover{ background:#951d17; }
+
+  #content{ max-width:1300px; margin:0 auto; padding:20px 22px 80px; }
+  .test-section{ animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0} to{opacity:1} }
+
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid var(--blue-900); padding-bottom:8px; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
+  .section-head .qrange{ color:var(--ink-soft); font-size:.9rem; }
+
+  .toolbar{ display:flex; gap:8px; margin-bottom:12px; }
+  .tbtn{ border:1px solid var(--line); background:var(--white); color:var(--blue-700); padding:5px 12px; border-radius:var(--radius); font-size:.82rem; font-weight:600; }
+  .tbtn.on{ background:var(--blue-600); color:var(--white); border-color:var(--blue-600); }
+  mark.hl{ background:#ffe07a; padding:0 1px; border-radius:2px; }
+
+  .twoCol{ display:grid; grid-template-columns: 1.15fr 1fr; gap:20px; align-items:start; }
+  .passageCol, .questionsCol{
+    max-height:calc(100vh - 165px); overflow-y:auto; border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; background:var(--white);
+  }
+  .passageCol{ background:#fbfcfe; }
+  .passageCol h2{ font-size:1.15rem; }
+  .passageCol p{ margin:0 0 12px; font-size:.94rem; }
+  .passageCol p strong.para{ color:var(--blue-700); }
+  .passageCol h4{ font-size:.98rem; color:var(--blue-700); margin:16px 0 6px; }
+
+  .qblock{ border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-bottom:14px; background:var(--white); }
+  .qblock h3{ font-size:.95rem; margin-bottom:8px; color:var(--ink); font-family:inherit; font-weight:700; }
+  .qsub{ color:var(--ink-soft); font-size:.82rem; margin:-2px 0 10px; }
+
+  .headingList{ border:1px dashed var(--line); border-radius:var(--radius); background:var(--blue-050); padding:10px 14px; margin-bottom:12px; font-size:.85rem; }
+  .headingList div{ margin:2px 0; }
+  .headingList b{ color:var(--blue-700); }
+
+  .fillLine{ margin:8px 0; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .fillLine .qnum{ display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; border-radius:50%; background:var(--blue-900); color:var(--white); font-size:.72rem; font-weight:700; flex:none; }
+  .fillLine label{ flex:1 1 auto; font-size:.9rem; }
+  .fillLine input[type=text]{ border:none; border-bottom:2px solid var(--blue-600); background:transparent; font-size:.92rem; padding:3px 4px; width:160px; font-family:inherit; color:var(--ink); }
+  .fillLine input[type=text]:focus{ outline:none; border-color:var(--blue-900); }
+  select.matchSel{ border:1px solid var(--blue-600); border-radius:4px; padding:4px 6px; font-family:inherit; font-size:.88rem; color:var(--ink); background:var(--white); }
+  input[disabled], select[disabled]{ background:#f6f7f9; color:var(--ink-soft); }
+
+  .optionRow{ display:flex; flex-direction:column; gap:6px; margin:6px 0 4px 4px; }
+  .optionRow label{ display:flex; gap:8px; align-items:flex-start; font-size:.88rem; }
+  .optionRow input{ margin-top:3px; }
+
+  .tableGrid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:2px; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-bottom:6px; font-size:.86rem; }
+  .tableGrid > div{ padding:8px 10px; background:var(--white); }
+  .tableGrid > div.hd{ background:var(--blue-100); font-weight:700; }
+  .tableGrid input[type=text]{ border:none; border-bottom:2px solid var(--blue-600); background:transparent; font-size:.86rem; padding:2px 4px; width:100%; font-family:inherit; color:var(--ink); }
+
+  .footNav{ display:flex; justify-content:space-between; margin-top:16px; }
+  .footNav button{ background:var(--white); border:1px solid var(--blue-600); color:var(--blue-700); padding:8px 18px; border-radius:999px; font-weight:600; }
+  .footNav button:hover{ background:var(--blue-100); }
+  .footNav button[disabled]{ opacity:.4; cursor:not-allowed; }
+
+  #landing{ max-width:640px; margin:60px auto; text-align:left; }
+  #landing ul{ color:var(--ink-soft); padding-left:20px; }
+  #landing li{ margin-bottom:6px; }
+  #startBtn{ background:var(--blue-600); color:var(--white); border:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:1rem; margin-top:16px; }
+  #startBtn:hover{ background:var(--blue-900); }
+  .noteRed{ color:var(--red-600); font-size:.85rem; }
+
+  #results{ max-width:900px; margin:0 auto; }
+  #results .scoreCard{ background:var(--blue-050); border:1px solid var(--blue-100); border-radius:var(--radius); padding:22px; text-align:center; margin-bottom:24px; }
+  #results .scoreCard .big{ font-size:2.4rem; font-weight:800; color:var(--blue-900); }
+  .reviewRow{ display:flex; gap:10px; padding:8px 4px; border-bottom:1px solid var(--line); font-size:.9rem; align-items:flex-start; flex-wrap:wrap; }
+  .reviewRow .num{ font-weight:700; width:28px; flex:none; }
+  .reviewRow .yourAns{ min-width:140px; }
+  .reviewRow .correct{ color:#1a7a3c; }
+  .reviewRow .wrong{ color:var(--red-600); text-decoration:line-through; }
+  .tag{ font-size:.72rem; font-weight:700; padding:1px 8px; border-radius:999px; flex:none; }
+  .tag.ok{ background:#e5f6ea; color:#1a7a3c; }
+  .tag.no{ background:var(--red-050); color:var(--red-600); }
+
+  .diagramWrap{ text-align:center; margin-bottom:10px; }
+  .diagramWrap svg{ max-width:100%; height:auto; border:1px solid var(--line); border-radius:var(--radius); background:#fff; }
+
+  @media (max-width:900px){
+    .twoCol{ grid-template-columns: 1fr; }
+    .passageCol, .questionsCol{ max-height:none; }
+    .tableGrid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="brand">
+    <h1 style="font-size:1.15rem;margin:0;">IELTS Reading Practice Test 4</h1>
+    <small>Academic — 3 passages</small>
+  </div>
+  <div id="timerWrap" class="hidden">
+    <span id="timerLabel">TIME REMAINING</span>
+    <span id="timerDisplay">60:00</span>
+  </div>
+</div>
+
+<nav id="sectionNav" class="hidden">
+  <button class="navBtn" data-target="passage1">Passage 1</button>
+  <button class="navBtn" data-target="passage2">Passage 2</button>
+  <button class="navBtn" data-target="passage3">Passage 3</button>
+  <button id="submitBtn">Submit test</button>
+</nav>
+
+<div id="content">
+
+  <!-- LANDING -->
+  <section id="landing">
+    <h2>Before you begin</h2>
+    <ul>
+      <li>The test has <strong>3 reading passages</strong> and <strong>40 questions</strong>.</li>
+      <li>You have <strong>60 minutes</strong> in total. The timer starts as soon as you click Start and cannot be paused. Your test is submitted automatically when time runs out.</li>
+      <li>You can submit at any time before that using the Submit button at the top of the page.</li>
+      <li>You can move between passages freely and return to earlier ones.</li>
+      <li>Select any text in a passage or question to highlight it, the same as on the real test paper.</li>
+      <li>After you submit, you'll see your score and the correct answers for every question.</li>
+    </ul>
+    <button id="startBtn">Start test</button>
+  </section>
+
+  <!-- PASSAGE 1 -->
+  <section id="passage1" class="test-section hidden">
+    <div class="section-head"><h2>Passage 1</h2><span class="qrange">Questions 1–14</span></div>
+    <div class="toolbar"><button class="tbtn" data-highlight-toggle>🖊 Highlight mode: off</button></div>
+
+    <div class="twoCol">
+      <div class="passageCol" data-highlight-zone>
+        <h2>Unmasking skin</h2>
+        <p><strong class="para">(A)</strong> If you took off your skin and laid it flat, it would cover an area of about twenty-one square feet, making it by far the body's largest organ. Draped in place over our bodies, skin forms the barrier between what's inside us and what's outside. It protects us from a multitude of external forces. It serves as an avenue to our most intimate physical and psychological selves.</p>
+        <p><strong class="para">(B)</strong> This impervious yet permeable barrier, less than a millimetre thick in places, is composed of three layers. The outermost layer is the bloodless epidermis. The dermis includes collagen, elastin, and nerve endings. The innermost layer, subcutaneous fat, contains tissue that acts as an energy source, cushion and insulator for the body.</p>
+        <p><strong class="para">(C)</strong> From these familiar characteristics of skin emerge the profound mysteries of touch, arguably our most essential source of sensory stimulation. We can live without seeing or hearing – in fact, without any of our other senses. But babies born without effective nerve connections between skin and brain can fail to thrive and may even die.</p>
+        <p><strong class="para">(D)</strong> Laboratory experiments decades ago, now considered unethical and inhumane, kept baby monkeys from being touched by their mothers. It made no difference that the babies could see, hear and smell their mothers; without touching, the babies became apathetic, and failed to progress.</p>
+        <p><strong class="para">(E)</strong> For humans, insufficient touching in early years can have lifelong results. 'In touching cultures, adult aggression is low, whereas in cultures where touch is limited, adult aggression is high,' writes Tiffany Field, director of the Touch Research Institutes at the University of Miami School of Medicine. Studies of a variety of cultures show a correspondence between high rates of physical affection in childhood and low rates of adult physical violence.</p>
+        <p><strong class="para">(F)</strong> While the effects of touching are easy to understand, the mechanics of it are less so. 'Your skin has millions of nerve cells of various shapes at different depths,' explains Stanley Bolanowski, a neuroscientist and associate director of the Institute for Sensory Research at Syracuse University. 'When the nerve cells are stimulated, physical energy is transformed into energy used by the nervous system and passed from the skin to the spinal cord and brain. It's called transduction, and no one knows exactly how it takes place.' Suffice it to say that the process involves the intricate, split-second operation of a complex system of signals between neurons in the skin and brain.</p>
+        <p><strong class="para">(G)</strong> This is starting to sound very confusing until Bolanowski says: 'In simple terms people perceive three basic things via skin: pressure, temperature, and pain.' And then I'm sure he's wrong. 'When I get wet, my skin feels wet,' I protest. 'Close your eyes and lean back,' says Bolanowski.</p>
+        <p><strong class="para">(H)</strong> Something cold and wet is on my forehead – so wet, in fact, that I wait for water to start dripping down my cheeks. 'Open your eyes.' Bolanowski says, showing me that the sensation comes from a chilled, but dry, metal cylinder. The combination of pressure and cold, he explains, is what makes my skin perceive wetness. He gives me a surgical glove to put on and has me put a finger in a glass of cold water. My finger feels wet, even though I have visual proof that it's not touching water. My skin, which seemed so reliable, has been deceiving me my entire life. When I shower or wash my hands, I now realize, my skin feels pressure and temperature. It's my brain that says I feel wet.</p>
+        <p><strong class="para">(I)</strong> Perceptions of pressure, temperature and pain manifest themselves in many different ways. Gentle stimulation of pressure receptors can result in ticklishness; gentle stimulation of pain receptors, in itching. Both sensations arise from a neurological transmission, not from something that physically exists. Skin, I'm realizing, is under constant assault, both from within the body and from forces outside. Repairs occur with varying success.</p>
+        <p><strong class="para">(J)</strong> Take the spot where I nicked myself with a knife while slicing fruit. I have a crusty scab surrounded by pink tissue about a quarter inch long on my right palm. Under the scab, epidermal cells are migrating into the wound to close it up. When the process is complete, the scab will fall off to reveal new epidermis. It's only been a few days, but my little self-repair is almost complete. Likewise, we recover quickly from slight burns. If you ever happen to touch a hot burner, just put your finger in cold water. The chances are you will have no blister, little pain and no scar. Severe burns, though, are a different matter.</p>
+      </div>
+
+      <div class="questionsCol" data-highlight-zone>
+        <div class="qblock">
+          <h3>Questions 1–4</h3>
+          <p class="qsub">The passage has 10 paragraphs, A–J. Which paragraph contains the following information?</p>
+          <div class="fillLine"><span class="qnum">1</span><label>the features of human skin, on and below the surface</label><select class="matchSel" data-q="1"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">2</span><label>an experiment in which the writer can see what is happening</label><select class="matchSel" data-q="2"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">3</span><label>advice on how you can avoid damage to the skin</label><select class="matchSel" data-q="3"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">4</span><label>cruel research methods used in the past</label><select class="matchSel" data-q="4"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 5–6</h3>
+          <p class="qsub">Choose the correct letter, A, B, C or D.</p>
+          <p style="font-size:.9rem;"><strong>5</strong> How does a lack of affectionate touching affect children?</p>
+          <div class="optionRow">
+            <label><input type="radio" name="q5" data-q="5" value="A"> A &nbsp;It makes them apathetic.</label>
+            <label><input type="radio" name="q5" data-q="5" value="B"> B &nbsp;They are more likely to become violent adults.</label>
+            <label><input type="radio" name="q5" data-q="5" value="C"> C &nbsp;They will be less aggressive when they grow up.</label>
+            <label><input type="radio" name="q5" data-q="5" value="D"> D &nbsp;We do not really know.</label>
+          </div>
+          <p style="font-size:.9rem;margin-top:12px;"><strong>6</strong> After the 'wetness' experiments, the writer says that</p>
+          <div class="optionRow">
+            <label><input type="radio" name="q6" data-q="6" value="A"> A &nbsp;his skin is not normal.</label>
+            <label><input type="radio" name="q6" data-q="6" value="B"> B &nbsp;his skin was wet when it felt wet.</label>
+            <label><input type="radio" name="q6" data-q="6" value="C"> C &nbsp;he knew why it felt wet when it was dry.</label>
+            <label><input type="radio" name="q6" data-q="6" value="D"> D &nbsp;the experiments taught him nothing new.</label>
+          </div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 7–11</h3>
+          <p class="qsub">Complete each sentence with the correct ending, A–J, from the box below.</p>
+          <div class="headingList">
+            <div><b>A.</b> because it is both cold and painful.</div>
+            <div><b>B.</b> because the outer layer of the skin can mend itself.</div>
+            <div><b>C.</b> because it can be extremely thin.</div>
+            <div><b>D.</b> because there is light pressure on the skin.</div>
+            <div><b>E.</b> because we do not need the others to survive.</div>
+            <div><b>F.</b> because there is a good blood supply to the skin.</div>
+            <div><b>G.</b> because of a small amount of pain.</div>
+            <div><b>H.</b> because there is a low temperature and pressure.</div>
+            <div><b>I.</b> because it is hurting a lot.</div>
+            <div><b>J.</b> because all humans are capable of experiencing it.</div>
+          </div>
+          <div class="fillLine"><span class="qnum">7</span><label>Touch is unique among the five senses</label><select class="matchSel" data-q="7"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">8</span><label>A substance may feel wet</label><select class="matchSel" data-q="8"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">9</span><label>Something may tickle</label><select class="matchSel" data-q="9"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">10</span><label>The skin may itch</label><select class="matchSel" data-q="10"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+          <div class="fillLine"><span class="qnum">11</span><label>A small cut heals up quickly</label><select class="matchSel" data-q="11"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 12–14</h3>
+          <p class="qsub">Do the following statements agree with the information given in Reading Passage 1?</p>
+          <div class="fillLine"><span class="qnum">12</span><label>Even scientists have difficulty understanding how our sense of touch works.</label><select class="matchSel" data-q="12"><option value="">–</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select></div>
+          <div class="fillLine"><span class="qnum">13</span><label>The skin is more sensitive to pressure than to temperature or pain.</label><select class="matchSel" data-q="13"><option value="">–</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select></div>
+          <div class="fillLine"><span class="qnum">14</span><label>The human skin is always good at repairing itself.</label><select class="matchSel" data-q="14"><option value="">–</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footNav"><button disabled>← Previous</button><button data-nextsection="passage2">Next: Passage 2 →</button></div>
+  </section>
+
+  <!-- PASSAGE 2 -->
+  <section id="passage2" class="test-section hidden">
+    <div class="section-head"><h2>Passage 2</h2><span class="qrange">Questions 15–27</span></div>
+    <div class="toolbar"><button class="tbtn" data-highlight-toggle>🖊 Highlight mode: off</button></div>
+
+    <div class="twoCol">
+      <div class="passageCol" data-highlight-zone>
+        <h2>How Lock Picking Works</h2>
+        <h4>Section A</h4>
+        <p>Lock picking is an essential skill for locksmiths because it lets them get past a lock without destroying it. When you lock yourself out of your house or lose your key, a locksmith can let you back in very easily.</p>
+        <p>Lock-picking skills are not particularly common among burglars, mainly because there are so many other, simpler ways of breaking into a house (throwing a brick through a back window, for example). For the most part, only intruders who need to cover their tracks, such as spies and detectives, will bother to pick a lock.</p>
+        <p>Simply understanding the principles of lock picking may change your whole attitude toward locks and keys. Lock picking clearly demonstrates that normal locks are not infallible devices. They provide a level of security that can be breached with minimal effort. With the right tools, a determined intruder can break into almost anything.</p>
+        <h4>Section B</h4>
+        <p>Locksmiths define lock-picking as the manipulation of a lock's components to open a lock without a key. To understand lock-picking, then, you first have to know how locks and keys work.</p>
+        <p>Think about the normal deadbolt lock you might find on a front door. In this sort of lock, a movable bolt or latch is embedded in the door so it can be extended out to the side. This bolt is lined up with a notch in the frame. When you turn the lock, the bolt extends into the notch in the frame, so the door can't move. When you retract the bolt, the door moves freely. The lock's only job is to make it simple for someone with a key to move the bolt but difficult for someone without a key to move it.</p>
+        <h4>Section C</h4>
+        <p>The most widely-used lock design is the cylinder lock. In this kind, the key turns a cylinder in the middle of the lock, which turns the attached mechanism. When the cylinder is turned one way, the mechanism pulls in on the bolt and the door can open. When the cylinder turns the other way, the mechanism releases the bolt so the door cannot open.</p>
+        <p>One of the most common cylinder locks is the pin design. Its main components are the housing (the outer part of the lock which does not move), the central cylinder, and several vertical shafts that run down from the housing into the cylinder. Inside these shafts are pairs of metal pins of varying length, held in position by small springs.</p>
+        <p>Without the key, the pins are partly in the housing and partly in the cylinder, so that the mechanism cannot turn and the lock, therefore, cannot open. When you put the correct key into the cylinder, the notches in the key push each pair of pins up just enough so that the top pin is completely in the housing and the bottom pin is entirely in the cylinder. It now turns freely, and you can open the lock.</p>
+        <h4>Section D</h4>
+        <p>To pick a pin lock, you simply move each pin pair into the correct position, one by one. There are two main tools used in the picking process.</p>
+        <p>Picks: long, thin pieces of metal that curve up at the end (like a dentist's pick). A tension wrench: the simplest sort of tension wrench is a thin screwdriver.</p>
+        <p>The first step in picking a lock is to insert the tension wrench into the keyhole and turn it in the same direction that you would turn the key. This turns the cylinder so that it is slightly offset from the housing around it, creating a slight ledge in the pin shafts.</p>
+        <p>While applying pressure on the cylinder, you slide the pick into the keyhole and begin lifting the pins. The object is to lift each pin pair up to the level at which the top pin moves completely into the housing, as if pushed by the correct key. When you do this while applying pressure with the tension wrench, you feel or hear a slight click when the pin falls into position. This is the sound of the upper pin falling into place on the ledge in the shaft. The ledge keeps the upper pin wedged in the housing, so it won't fall back down into the cylinder. In this way, you move each pin pair into the correct position until all the upper pins are pushed completely into the housing and all the lower pins rest inside the cylinder. At this point, the cylinder rotates freely and you can open the lock.</p>
+        <h4>Section E</h4>
+        <p>You'll find pin locks everywhere, from houses to padlocks. They are so popular because they are relatively inexpensive but offer moderate security.</p>
+        <p>Another common type of cylinder lock is the wafer lock. These work the same basic way as pin locks, but they have flat, thin pieces of metal called wafers rather than pins. You pick the wafers exactly the same way you pick pins – in fact, it is a little bit easier to pick wafer locks because the keyhole is wider. Despite giving relatively low security, these locks are found in most cars.</p>
+        <p>Tubular locks provide superior protection to pin and wafer locks, but they are also more expensive. Instead of one row of pins, tubular locks have pins positioned all the way around the circumference of the cylinder. This makes them much harder to pick. Conventional lock-picking techniques don't usually work on this type of lock, which is why they are often found on vending machines.</p>
+      </div>
+
+      <div class="questionsCol" data-highlight-zone>
+        <div class="qblock">
+          <h3>Questions 15–19</h3>
+          <p class="qsub">Choose the most suitable headings for sections A–E from the list of headings below.</p>
+          <div class="headingList">
+            <div><b>i.</b> How to make the locks in your home more secure</div>
+            <div><b>ii.</b> How to open a lock without a key</div>
+            <div><b>iii.</b> Choosing the right tools to open locks</div>
+            <div><b>iv.</b> The cylinder and the bolt</div>
+            <div><b>v.</b> How to open a lock with a different key</div>
+            <div><b>vi.</b> Lock varieties</div>
+            <div><b>vii.</b> How a basic deadbolt system works</div>
+            <div><b>viii.</b> The people who open locks without a key</div>
+            <div><b>ix.</b> How a cylinder lock works</div>
+            <div><b>x.</b> How to pick different kinds of lock</div>
+          </div>
+          <div class="fillLine"><span class="qnum">15</span><label>Section A</label><select class="matchSel" data-q="15"><option value="">–</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option><option>x</option></select></div>
+          <div class="fillLine"><span class="qnum">16</span><label>Section B</label><select class="matchSel" data-q="16"><option value="">–</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option><option>x</option></select></div>
+          <div class="fillLine"><span class="qnum">17</span><label>Section C</label><select class="matchSel" data-q="17"><option value="">–</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option><option>x</option></select></div>
+          <div class="fillLine"><span class="qnum">18</span><label>Section D</label><select class="matchSel" data-q="18"><option value="">–</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option><option>x</option></select></div>
+          <div class="fillLine"><span class="qnum">19</span><label>Section E</label><select class="matchSel" data-q="19"><option value="">–</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option><option>x</option></select></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 20–22</h3>
+          <p class="qsub">Complete the diagram below. Choose ONLY ONE WORD from the passage for each answer.</p>
+          <div class="diagramWrap">
+            <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+              <text x="190" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#152238">Pin tumbler lock — cross-section</text>
+              <!-- housing -->
+              <rect x="60" y="40" width="260" height="180" fill="#f4f8fd" stroke="#1c5fb8" stroke-width="2"/>
+              <text x="335" y="60" font-size="11" fill="#152238">← 20</text>
+              <!-- cylinder -->
+              <rect x="110" y="90" width="160" height="80" rx="8" fill="#e8f0fc" stroke="#154a91" stroke-width="2"/>
+              <text x="335" y="130" font-size="11" fill="#152238">← 21</text>
+              <!-- pin shafts -->
+              <rect x="150" y="55" width="10" height="120" fill="#fff" stroke="#4c5a70"/>
+              <rect x="190" y="55" width="10" height="120" fill="#fff" stroke="#4c5a70"/>
+              <rect x="230" y="55" width="10" height="120" fill="#fff" stroke="#4c5a70"/>
+              <!-- pins -->
+              <rect x="151" y="58" width="8" height="35" fill="#152238"/>
+              <rect x="151" y="98" width="8" height="30" fill="#b3261e"/>
+              <rect x="191" y="58" width="8" height="45" fill="#152238"/>
+              <rect x="191" y="108" width="8" height="25" fill="#b3261e"/>
+              <rect x="231" y="58" width="8" height="30" fill="#152238"/>
+              <rect x="231" y="93" width="8" height="35" fill="#b3261e"/>
+              <text x="335" y="200" font-size="11" fill="#152238">← 22</text>
+              <line x1="200" y1="180" x2="200" y2="195" stroke="#4c5a70" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="fillLine"><span class="qnum">20</span><label>outer part of the lock, does not move:</label><input type="text" data-q="20" style="width:150px;"></div>
+          <div class="fillLine"><span class="qnum">21</span><label>turns to open the lock:</label><input type="text" data-q="21" style="width:150px;"></div>
+          <div class="fillLine"><span class="qnum">22</span><label>metal pieces of varying length inside the shafts:</label><input type="text" data-q="22" style="width:150px;"></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 23–25</h3>
+          <p class="qsub">Complete the notes below. Choose NO MORE THAN THREE WORDS from the passage for each answer.</p>
+          <p style="font-weight:700;font-size:.9rem;">Picking a lock</p>
+          <div class="fillLine"><label>Turn cylinder slightly using</label><span class="qnum">23</span><input type="text" data-q="23" style="width:170px;"></div>
+          <div class="fillLine"><label>Hold cylinder still and insert</label><span class="qnum">24</span><input type="text" data-q="24" style="width:170px;"></div>
+          <div class="fillLine"><label>Push top pin into shaft.</label></div>
+          <div class="fillLine"><label>Hold top pin above cylinder, on</label><span class="qnum">25</span><input type="text" data-q="25" style="width:170px;"></div>
+          <div class="fillLine"><label>Lift and hold all other pins in same way. Turn cylinder and open lock.</label></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 26–27</h3>
+          <p class="qsub">Complete the table below. Choose NO MORE THAN THREE WORDS from the passage for each answer.</p>
+          <div class="tableGrid">
+            <div class="hd">Type of lock</div><div class="hd">How secure?</div><div class="hd">Where used?</div>
+            <div>Pin</div><div><span class="qnum" style="margin-right:4px;">26</span><input type="text" data-q="26" style="width:150px;"></div><div>houses, padlocks, etc</div>
+            <div><span class="qnum" style="margin-right:4px;">27</span><input type="text" data-q="27" style="width:150px;"></div><div>relatively low security</div><div>most cars</div>
+            <div>Tubular</div><div>superior protection</div><div>vending machines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footNav"><button data-prevsection="passage1">← Previous</button><button data-nextsection="passage3">Next: Passage 3 →</button></div>
+  </section>
+
+  <!-- PASSAGE 3 -->
+  <section id="passage3" class="test-section hidden">
+    <div class="section-head"><h2>Passage 3</h2><span class="qrange">Questions 28–40</span></div>
+    <div class="toolbar"><button class="tbtn" data-highlight-toggle>🖊 Highlight mode: off</button></div>
+
+    <div class="twoCol">
+      <div class="passageCol" data-highlight-zone>
+        <h2>Stars without the stripes</h2>
+        <p>Managing cultural diversity is a core component of most masters programmes these days. The growth of Japanese corporations in the sixties and seventies reminded us that there were other models of business than those taught by Harvard professors and US-based management consultants. And the cultural limits to the American model have more recently been underlined by developments in Russia and central Europe over the past decade.</p>
+        <p>Yet in Britain, we are still more ready to accept the American model of management than most other European countries. As a result, UK managers often fail to understand how business practices are fundamentally different on the Continent. One outcome is that many mergers and acquisitions, strategic alliances and joint ventures between British and European companies do not achieve their objectives and end in tears.</p>
+        <p>Alternatively, managers may avoid a merger or joint venture which makes sense from a hard-nosed strategic point of view because they fear that different working practices will prevent their goals from being achieved.</p>
+        <p>Essentially, Anglo-Saxon companies are structured on the principles of project management. In the eighties, companies were downsized, with tiers of management eliminated. In the nineties, management fashion embraced the ideas of business process re-engineering, so organizations were broken down into customer-focused trading units. Sometimes these were established as subsidiary companies, at other times as profit-and-loss or cost centres.</p>
+        <p>Over the past ten years, these principles have been applied as vigorously to the UK public sector as to private-sector corporations. Hospitals, schools, universities, social services departments, as well as large areas of national government, now operate on project management principles – all with built-in operational targets, key success factors, and performance-related reward systems.</p>
+        <p>The underlying objectives for this widespread process of organizational restructuring have been to increase the transparency of operations, encourage personal accountability, become more efficient at delivering service to customer, and directly relate rewards to performance.</p>
+        <p>The result is a management culture which is entrepreneurially oriented and focused almost entirely on the short term, and highly segmented organizational structures – since employee incentives and rewards are geared to the activities of their own particular unit.</p>
+        <p>This business model has also required development of new personal skills. We are now encouraged to lead, rather than to manage by setting goals and incentive systems for staff. We have to be cooperative team members rather than work on our own. We have to accept that, in flattened and decentralized organizations, there are very limited career prospects. We are to be motivated by target-related rewards rather than a longer-term commitment to our employing organization.</p>
+        <p>This is in sharp contrast to the model of management that applies elsewhere in Europe. The principles of business process re-engineering have never been fully accepted in France, Germany and the other major economies; while in some Eastern European economies, the attempt to apply them in the nineties brought the economy virtually to its knees, and created huge opportunities for corrupt middle managers and organized crime.</p>
+        <p>Instead, continental European companies have stuck to the bureaucratic model which delivered economic growth for them throughout the twentieth century. European corporations continue to be structured hierarchically, with clearly defined job descriptions and explicit channels of reporting. Decision making, although incorporating consultative processes, remains essentially top-down.</p>
+        <p>Which of these two models is preferable? Certainly, the downside of the Anglo-American model is now becoming evident, not least in the long-hours working culture that the application of the decentralized project management model inevitably generates.</p>
+        <p>Whether in a hospital, a software start-up or a factory, the breakdown of work processes into project-driven targets leads to over-optimistic goals and underestimates of the resources needed. The result is that the success of projects often demands excessively long working hours if the targets are to be achieved.</p>
+        <p>Further, the success criteria, as calibrated in performance targets, are inevitably arbitrary, and the source of ongoing dispute. Witness the objections of teachers and medics to the performance measures applied to them by successive governments. This is not surprising. In a factory producing cars the output of individuals is directly measurable, but what criteria can be used to measure output and performance in knowledge-based activities such as R&D labs, government offices, and even the marketing departments of large corporations?</p>
+        <p>The demands and stresses of operating according to the Anglo-American model seem to be leading to increasing rates of personnel burn-out. It is not surprising that managers queue for early retirement. In a recent survey, just a fifth said they would work to 65. This could be why labour market participation rates have declined so dramatically for British 50-year-olds in the past twenty years.</p>
+        <p>By contrast, the European management model allows for family-friendly employment policies and working hours directives to be implemented. It encourages staff to have a long-term psychological commitment to their employing organizations. Of course, companies operating on target-focused project management principles may be committed to family-friendly employment policies in theory. But, if the business plan has to be finished by the end of the month, the advertising campaign completed by the end of next week, and patients pushed through the system to achieve measurable targets, are we really going to let down our 'team' by clocking out at 5 p.m. and taking our full entitlement of annual leave?</p>
+        <p>Perhaps this is why we admire the French for their quality of life.</p>
+      </div>
+
+      <div class="questionsCol" data-highlight-zone>
+        <div class="qblock">
+          <h3>Questions 28–31</h3>
+          <p class="qsub">Do the following statements agree with the writer's views in Reading Passage 3?</p>
+          <div class="fillLine"><span class="qnum">28</span><label>Attempts by British and mainland European firms to work together often fail.</label><select class="matchSel" data-q="28"><option value="">–</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select></div>
+          <div class="fillLine"><span class="qnum">29</span><label>Project management principles discourage consideration of long-term issues.</label><select class="matchSel" data-q="29"><option value="">–</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select></div>
+          <div class="fillLine"><span class="qnum">30</span><label>There are good opportunities for promotion within segmented companies.</label><select class="matchSel" data-q="30"><option value="">–</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select></div>
+          <div class="fillLine"><span class="qnum">31</span><label>The European model gives more freedom of action to junior managers.</label><select class="matchSel" data-q="31"><option value="">–</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 32–37</h3>
+          <p class="qsub">Complete the summary below. Choose the answers from the box. There are more choices than spaces, so you will not need to use all of them.</p>
+          <div class="headingList">
+            argument · temperature · reach · manufacturing · increasing · able · office · pressure · negative · predict · declining · agreement · discussion · no · willing · unwilling
+          </div>
+          <p style="font-size:.9rem;line-height:1.9;">
+            Adopting the US model in Britain has had negative effects. These include the
+            <span class="qnum" style="margin:0 4px;">32</span><select class="matchSel" data-q="32"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            hours spent at work, as small sections of large organizations struggle to
+            <span class="qnum" style="margin:0 4px;">33</span><select class="matchSel" data-q="33"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            unrealistic short-term objectives. Nor is there
+            <span class="qnum" style="margin:0 4px;">34</span><select class="matchSel" data-q="34"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            on how to calculate the productivity of professional, technical, and clerical staff, who cannot be assessed in the same way as
+            <span class="qnum" style="margin:0 4px;">35</span><select class="matchSel" data-q="35"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            employees. In addition, managers within this culture are finding the
+            <span class="qnum" style="margin:0 4px;">36</span><select class="matchSel" data-q="36"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            of work too great, with 80% reported to be
+            <span class="qnum" style="margin:0 4px;">37</span><select class="matchSel" data-q="37"><option value="">–</option><option>argument</option><option>temperature</option><option>reach</option><option>manufacturing</option><option>increasing</option><option>able</option><option>office</option><option>pressure</option><option>negative</option><option>predict</option><option>declining</option><option>agreement</option><option>discussion</option><option>no</option><option>willing</option><option>unwilling</option></select>
+            to carry on working until the normal retirement age.
+          </p>
+        </div>
+
+        <div class="qblock">
+          <h3>Questions 38–39</h3>
+          <p class="qsub">Complete the notes below. Choose NO MORE THAN THREE WORDS from Reading Passage 3 for each answer.</p>
+          <div class="fillLine"><label>Working conditions in mainland Europe are in practice more likely to be</label><span class="qnum">38</span><input type="text" data-q="38" style="width:170px;"></div>
+          <div class="fillLine"><label>UK managers working to tight deadlines probably give up some of their</label><span class="qnum">39</span><input type="text" data-q="39" style="width:170px;"></div>
+        </div>
+
+        <div class="qblock">
+          <h3>Question 40</h3>
+          <p class="qsub">Choose the correct letter, A, B, C or D.</p>
+          <p style="font-size:.9rem;"><strong>40</strong> Which of the following statements best describes the writer's main purpose in Reading Passage 3?</p>
+          <div class="optionRow">
+            <label><input type="radio" name="q40" data-q="40" value="A"> A &nbsp;to argue that Britain should have adopted the Japanese model of management many years ago</label>
+            <label><input type="radio" name="q40" data-q="40" value="B"> B &nbsp;to criticize Britain's adoption of the US model, as compared to the European model.</label>
+            <label><input type="radio" name="q40" data-q="40" value="C"> C &nbsp;to propose a completely new model that would be neither American nor European</label>
+            <label><input type="radio" name="q40" data-q="40" value="D"> D &nbsp;to point out the negative effects of the existing model on the management of hospitals in Britain</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footNav"><button data-prevsection="passage2">← Previous</button><button id="finalSubmitBtn">Submit test →</button></div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="hidden">
+    <div class="scoreCard">
+      <div>Your score</div>
+      <div class="big" id="scoreBig">0 / 40</div>
+      <div id="scoreNote" style="color:var(--ink-soft);font-size:.9rem;"></div>
+    </div>
+    <div id="reviewList"></div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var KEY = {
+    1:["b"], 2:["h"], 3:["j"], 4:["d"],
+    5:["b"], 6:["c"],
+    7:["e"], 8:["h"], 9:["d"], 10:["g"], 11:["b"],
+    12:["true"], 13:["not given"], 14:["false"],
+    15:["viii"], 16:["vii"], 17:["ix"], 18:["ii"], 19:["vi"],
+    20:["housing"], 21:["cylinder"], 22:["pins"],
+    23:["a tension wrench","a wrench","the tension wrench","the wrench","tension wrench","wrench"],
+    24:["a pick","the pick","pick"],
+    25:["the ledge","ledge","ledge in shaft"],
+    26:["moderate security","moderate"],
+    27:["the wafer lock","wafer lock","the wafer","wafer"],
+    28:["yes"], 29:["yes"], 30:["no"], 31:["no"],
+    32:["increasing"], 33:["reach"], 34:["agreement"], 35:["manufacturing"], 36:["pressure"], 37:["unwilling"],
+    38:["family-friendly"],
+    39:["annual leave","leave"],
+    40:["b"]
+  };
+  var GROUP_KEY = {};
+
+  var TOTAL_QUESTIONS = 40;
+  var TEST_SECONDS = 60 * 60;
+  var SECTIONS = ["passage1","passage2","passage3"];
+
+  var timeLeft = TEST_SECONDS;
+  var timerInterval = null;
+  var submitted = false;
+
+  function $(sel, root){ return (root||document).querySelector(sel); }
+  function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function norm(s){ return (s||"").trim().toLowerCase().replace(/\s+/g," "); }
+
+  $("#startBtn").addEventListener("click", function(){
+    $("#landing").classList.add("hidden");
+    $("#sectionNav").classList.remove("hidden");
+    $("#timerWrap").classList.remove("hidden");
+    showSection("passage1");
+    startTimer();
+  });
+
+  function startTimer(){
+    updateTimerDisplay();
+    timerInterval = setInterval(function(){
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0){
+        clearInterval(timerInterval);
+        submitTest(true);
+      }
+    }, 1000);
+  }
+  function updateTimerDisplay(){
+    var m = Math.floor(timeLeft/60), s = timeLeft%60;
+    var disp = $("#timerDisplay");
+    disp.textContent = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    disp.classList.toggle("warning", timeLeft <= 300);
+  }
+
+  function showSection(id){
+    $all(".test-section").forEach(function(sec){ sec.classList.add("hidden"); });
+    $("#"+id).classList.remove("hidden");
+    $all(".navBtn").forEach(function(b){ b.classList.toggle("active", b.dataset.target === id); });
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  $all(".navBtn[data-target]").forEach(function(btn){ btn.addEventListener("click", function(){ showSection(btn.dataset.target); }); });
+  $all("[data-nextsection]").forEach(function(btn){ btn.addEventListener("click", function(){ showSection(btn.dataset.nextsection); }); });
+  $all("[data-prevsection]").forEach(function(btn){ btn.addEventListener("click", function(){ showSection(btn.dataset.prevsection); }); });
+
+  $all("[data-highlight-toggle]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var zoneContainer = btn.closest(".test-section");
+      var isOn = btn.classList.toggle("on");
+      btn.textContent = isOn ? "🖊 Highlight mode: on" : "🖊 Highlight mode: off";
+      zoneContainer.dataset.highlighting = isOn ? "1" : "0";
+    });
+  });
+
+  document.addEventListener("mouseup", function(){
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+    var range = sel.getRangeAt(0);
+    var container = range.commonAncestorContainer;
+    var zone = (container.nodeType === 1 ? container : container.parentElement);
+    var block = zone ? zone.closest("[data-highlight-zone]") : null;
+    if (!block) return;
+    var section = block.closest(".test-section");
+    if (!section || section.dataset.highlighting !== "1") return;
+    try{
+      var mark = document.createElement("mark");
+      mark.className = "hl";
+      range.surroundContents(mark);
+      sel.removeAllRanges();
+    }catch(e){ /* selection spans multiple elements — skip (prototype limitation) */ }
+  });
+
+  function getVal(id){
+    var el = $('[data-q="'+id+'"]:not([type=radio])');
+    if (el) return el.value;
+    var radio = $('input[type=radio][data-q="'+id+'"]:checked');
+    return radio ? radio.value : "";
+  }
+
+  function gradeAndRender(){
+    var correctCount = 0;
+    var rows = [];
+    var allNums = [];
+    for (var i = 1; i <= TOTAL_QUESTIONS; i++) allNums.push(i);
+
+    var groupedNums = {};
+    Object.keys(GROUP_KEY).forEach(function(gk){
+      var parts = gk.split("-");
+      var start = parseInt(parts[0],10), end = parseInt(parts[1],10);
+      for (var n=start;n<=end;n++) groupedNums[n] = gk;
+    });
+
+    allNums.forEach(function(q){
+      if (groupedNums[q]) return;
+      var userVal = getVal(q);
+      var accepted = KEY[q] || [];
+      var isCorrect = accepted.some(function(a){ return norm(a) === norm(userVal); });
+      if (isCorrect) correctCount++;
+      rows.push({num:q, your:userVal, correct:accepted.join(" / "), ok:isCorrect});
+    });
+
+    Object.keys(GROUP_KEY).forEach(function(gk){
+      var parts = gk.split("-");
+      var nums = [];
+      for (var n=parseInt(parts[0],10); n<=parseInt(parts[1],10); n++) nums.push(n);
+      var checked = $all('input[type=checkbox][data-qgroup="'+gk+'"]:checked').map(function(c){return c.value;});
+      var correctSet = GROUP_KEY[gk].slice().sort();
+      var gotSet = checked.slice().sort();
+      var isCorrect = gotSet.length === correctSet.length && gotSet.every(function(v,i){return v===correctSet[i];});
+      nums.forEach(function(n){
+        if (isCorrect) correctCount++;
+        rows.push({num:n, your: checked.join(", ") || "(none)", correct: correctSet.join(" / "), ok:isCorrect});
+      });
+    });
+
+    rows.sort(function(a,b){ return a.num - b.num; });
+
+    $("#scoreBig").textContent = correctCount + " / " + TOTAL_QUESTIONS;
+    $("#scoreNote").textContent = bandNote(correctCount);
+
+    var list = $("#reviewList");
+    list.innerHTML = "";
+    rows.forEach(function(r){
+      var div = document.createElement("div");
+      div.className = "reviewRow";
+      div.innerHTML =
+        '<span class="num">'+r.num+'</span>' +
+        '<span class="tag '+(r.ok?"ok":"no")+'">'+(r.ok?"Correct":"Incorrect")+'</span>' +
+        '<span class="yourAns '+(r.ok?"correct":"wrong")+'">Your answer: '+ (r.your || "(blank)") +'</span>' +
+        (r.ok ? '' : '<span class="yourAns correct">Correct answer: '+r.correct+'</span>');
+      list.appendChild(div);
+    });
+  }
+
+  function bandNote(score){
+    if (score >= 39) return "Excellent — Band 9 range.";
+    if (score >= 35) return "Very strong — Band 8 range.";
+    if (score >= 30) return "Good — Band 7 range.";
+    if (score >= 23) return "Solid — Band 6 range.";
+    if (score >= 16) return "Fair — Band 5 range.";
+    return "Keep practising — review the passages and try again.";
+  }
+
+  function lockAllInputs(){
+    $all("input, select").forEach(function(el){ el.disabled = true; });
+  }
+
+  function submitTest(auto){
+    if (submitted) return;
+    submitted = true;
+    clearInterval(timerInterval);
+    lockAllInputs();
+    $all(".test-section").forEach(function(s){ s.classList.add("hidden"); });
+    $("#sectionNav").classList.add("hidden");
+    $("#timerWrap").classList.add("hidden");
+    $("#results").classList.remove("hidden");
+    gradeAndRender();
+    if (auto){
+      var note = document.createElement("p");
+      note.className = "noteRed";
+      note.textContent = "Time's up — your test was submitted automatically.";
+      $("#results").insertBefore(note, $("#results").firstChild);
+    }
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  $("#submitBtn").addEventListener("click", function(){ confirmSubmit(); });
+  $("#finalSubmitBtn").addEventListener("click", function(){ confirmSubmit(); });
+  function confirmSubmit(){
+    if (window.confirm("Submit the test now? You won't be able to change your answers afterwards.")){
+      submitTest(false);
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
